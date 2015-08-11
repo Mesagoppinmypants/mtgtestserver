@@ -41,6 +41,36 @@
 --which carries forward this exception.
 
 
+--New Stuff
+
+--***********************************************************************************************************************************************
+
+object_mobile_skeleton_shared_blistmok = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/skeleton/shared_blistmok.iff"
+}
+ObjectTemplates:addClientTemplate(object_mobile_skeleton_shared_blistmok, "object/mobile/skeleton/shared_blistmok.iff")
+--***********************************************************************************************************************************************
+object_mobile_skeleton_shared_sher_kar = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/skeleton/shared_sher_kar.iff"
+}
+ObjectTemplates:addClientTemplate(object_mobile_skeleton_shared_sher_kar, "object/mobile/skeleton/shared_sher_kar.iff")
+--***********************************************************************************************************************************************
+object_mobile_skeleton_shared_tanray = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/skeleton/shared_tanray.iff"
+}
+ObjectTemplates:addClientTemplate(object_mobile_skeleton_shared_tanray, "object/mobile/skeleton/shared_tanray.iff")
+--***********************************************************************************************************************************************
+object_mobile_skeleton_shared_tulrus = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/skeleton/shared_tulrus.iff"
+}
+ObjectTemplates:addClientTemplate(object_mobile_skeleton_shared_tulrus, "object/mobile/skeleton/shared_tulrus.iff")
+--***********************************************************************************************************************************************
+--[[object_mobile_skeleton_shared_undead_humanoid = SharedCreatureObjectTemplate:new {
+	clientTemplateFileName = "object/mobile/skeleton/shared_undead_humanoid.iff"
+}
+ObjectTemplates:addClientTemplate(object_mobile_skeleton_shared_undead_humanoid, "object/mobile/skeleton/shared_undead_humanoid.iff")]]--
+--***********************************************************************************************************************************************
+
 object_mobile_skeleton_shared_acklay = SharedCreatureObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/skeleton/shared_acklay.iff"
 	--Data below here is deprecated and loaded from the tres, keeping for easy lookups
@@ -1671,6 +1701,7 @@ object_mobile_skeleton_shared_fambaa = SharedCreatureObjectTemplate:new {
 	rangedIntCustomizationVariables = {},
 
 	scale = 1,
+
 	scaleThresholdBeforeExtentTest = 0.5,
 	sendToClient = 1,
 	slopeModAngle = 26,
