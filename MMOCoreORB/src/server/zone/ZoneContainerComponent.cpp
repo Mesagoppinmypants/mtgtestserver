@@ -151,11 +151,6 @@ bool ZoneContainerComponent::transferObject(SceneObject* sceneObject, SceneObjec
 		else
 			object->setParent(NULL);
 
-		if (object->getParent() != NULL && parent->containsChildObject(object))
-			return false;
-		else
-			object->setParent(NULL);
-
 		if (parent->isCellObject()) {
 			ManagedReference<BuildingObject*> build = cast<BuildingObject*>(parent->getParent().get().get());
 
@@ -183,7 +178,7 @@ bool ZoneContainerComponent::transferObject(SceneObject* sceneObject, SceneObjec
 
 	zone->insert(object);
 
-	zone->inRange(object, 192);
+	zone->inRange(object, ZoneServer::CLOSEOBJECTRANGE);
 
 	if (object->isTangibleObject()) {
 		TangibleObject* tano = cast<TangibleObject*>(object);

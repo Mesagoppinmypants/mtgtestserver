@@ -252,7 +252,7 @@ float ProceduralTerrainAppearance::processTerrain(Layer* layer, float x, float y
 	bool hasBoundaries = false;
 
 	FilterRectangle rect;
-	rect.minX = FLT_MAX, rect.maxX = FLT_MIN, rect.minY = FLT_MAX, rect.maxY = FLT_MIN;
+	rect.minX = FLT_MAX, rect.maxX = -FLT_MAX, rect.minY = FLT_MAX, rect.maxY = -FLT_MAX;
 
 	for (int i = 0; i < boundaries->size(); ++i) {
 		Boundary* boundary = boundaries->get(i);
@@ -492,15 +492,15 @@ TerrainGenerator* ProceduralTerrainAppearance::addTerrainModification(engine::ut
 	return terrain;
 }
 
-void ProceduralTerrainAppearance::removeTerrainModification(uint64 objectid) {
+TerrainGenerator* ProceduralTerrainAppearance::removeTerrainModification(uint64 objectid) {
 	Locker locker(&guard);
 
 	TerrainGenerator* layer = terrainModifications.remove(objectid);
 
 	if (layer == NULL)
-		return;
+		return NULL;
 
 	customTerrain.removeElement(layer);
 
-	delete layer;
+	return layer;
 }

@@ -48,10 +48,6 @@ void CityRegionImplementation::notifyLoadFromDatabase() {
 	if (cityRank == CityManager::CLIENT)
 		return;
 
-	if (cityRank < CityManager::TOWNSHIP) {
-		citySpecialization = "";
-	}
-
 	Zone* zone = getZone();
 
 	if (zone == NULL)
@@ -61,33 +57,6 @@ void CityRegionImplementation::notifyLoadFromDatabase() {
 
 	if (isRegistered())
 		zone->getPlanetManager()->addRegion(_this.getReferenceUnsafeStaticCast());
-
-	//Add taxes if they dont exist.
-	if (taxes.size() <= 0) {
-		info("Adding taxes for existing city that had no taxes.", true);
-		taxes.add(0);
-		taxes.add(0);
-		taxes.add(0);
-		taxes.add(0);
-		taxes.add(0);
-	}
-
-	CityManager* cityManager = getZone()->getZoneServer()->getCityManager();
-
-	if (cityManager == NULL)
-		return;
-
-	//Reset any tax rates that are over max
-	for (int i = 0; i < taxes.size(); i++) {
-		CityTax* cityTax = cityManager->getCityTax(i);
-
-		if (cityTax == NULL)
-			continue;
-
-		if (taxes.get(i) > cityTax->getMaxValue()) {
-			taxes.set(i, 0);
-		}
-	}
 }
 
 void CityRegionImplementation::initialize() {
@@ -386,7 +355,7 @@ void CityRegionImplementation::cleanupCitizens() {
 	for (int i = 0; i < completeStructureList.size(); ++i) {
 		uint64 oid = completeStructureList.get(i);
 
-		ManagedReference<BuildingObject*> building = zone->getZoneServer()->getObject(oid).castTo<BuildingObject*>();
+		ManagedReference<BuildingObject*> building = Core::getObjectBroker()->lookUp(oid).castTo<BuildingObject*>();
 
 		if (building != NULL) {
 			if (building->isResidence()) {

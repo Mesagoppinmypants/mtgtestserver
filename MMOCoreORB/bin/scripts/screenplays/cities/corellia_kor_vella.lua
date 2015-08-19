@@ -16,7 +16,7 @@ end
 function CorelliaKorVellaScreenPlay:spawnSceneObjects()
 
 	--outside starport
-	spawnSceneObject("corellia", "object/tangible/crafting/station/public_space_station.iff", -3118.55, 31, 2783.4, 0, 260 )
+	spawnSceneObject("corellia", "object/tangible/crafting/station/public_space_station.iff", -3118.55, 31, 2783.4, 0, math.rad(90) )
 
 end
 
@@ -504,15 +504,15 @@ function CorelliaKorVellaScreenPlay:spawnMobiles()
 	spawnMobile("corellia", "trainer_brawler", 0, -11, 1.13, -14, 0, 2955427)
 
 		--Cloning Facility
-	spawnMobile("corellia", "bothan_diplomat", 60, 4.47, -0.05, 2.9, 135, 3005428)
-	spawnMobile("corellia", "bothan_information_broker", 60, 5.57, -0.05, 2.9, 180, 3005428)
-	spawnMobile("corellia", "corsec_chief", 300, 3.9, -0.05, -3.15, 0, 3005428)
-	spawnMobile("corellia", "miner", 60, 5.57, -0.05, 1.84, 0, 3005428)
-	spawnMobile("corellia", "slicer", 60, 3.98, -0.05, -2.04, 180, 3005428)
-	spawnMobile("corellia", "bothan_diplomat", 60, 3.19, -5.5, -6.32, 180, 3005430)
+	spawnMobile("corellia", "info_broker", 60, 4.47, -0.05, 2.9, 135, 3005428)
+	spawnMobile("corellia", "medic", 60, 5.57, -0.05, 2.9, 180, 3005428)
+	spawnMobile("corellia", "medic", 300, 3.9, -0.05, -3.15, 0, 3005428)
+	spawnMobile("corellia", "scientist", 60, 5.57, -0.05, 1.84, 0, 3005428)
+	spawnMobile("corellia", "farmer", 60, 3.98, -0.05, -2.04, 180, 3005428)
+	spawnMobile("corellia", "contractor", 60, 3.19, -5.5, -6.32, 180, 3005430)
 	spawnMobile("corellia", "brawler", 60, 2.09, -5.5, -6.32, 135, 3005430)
 	spawnMobile("corellia", "businessman", 60, 3.19, -5.5, -7.42, 0, 3005430)
-	spawnMobile("corellia", "corsec_agent", 300, -5.69, -5.5, -9.21, 180, 3005430)
+	spawnMobile("corellia", "artisan", 300, -5.69, -5.5, -9.21, 180, 3005430)
 	spawnMobile("corellia", "farmer_rancher", 60, -5.69, -5.5, -10.31, 0, 3005430)
 
 		--Guild Hall (-3680,3081)
