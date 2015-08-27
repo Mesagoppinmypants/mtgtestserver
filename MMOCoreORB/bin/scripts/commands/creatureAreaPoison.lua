@@ -48,9 +48,9 @@ CreatureAreaPoisonCommand = {
 	  DotEffect( 
 		POISONED_EFFECT, 
 		{ "resistance_poison", "poison_disease_resist" },
-		HEALTH,
+		ATTACK_POOL,
 		true,
-		125,
+		0,
 		50,
 		50, 
 		120

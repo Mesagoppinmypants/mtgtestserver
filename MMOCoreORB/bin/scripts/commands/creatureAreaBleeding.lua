@@ -48,9 +48,9 @@ CreatureAreaBleedingCommand = {
 	  DotEffect( 
 		BLEEDING, 
 		{ "resistance_bleeding", "bleed_resist" },
-		HEALTH,
+		ATTACK_POOL,
 		true,
-		125,
+		0,
 		100,
 		50, 
 		120

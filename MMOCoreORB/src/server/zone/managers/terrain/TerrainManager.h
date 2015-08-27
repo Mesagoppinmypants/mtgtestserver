@@ -35,6 +35,8 @@ class TerrainManager : public Logger, public Object {
 
 	TerrainCache* heightCache;
 
+	float min, max;
+
 protected:
 	void clearCache(TerrainGenerator* generator);
 
@@ -111,6 +113,10 @@ public:
 
 	int getCachedValuesCount() {
 		return heightCache->getSize();
+	}
+
+	int getCacheEvictCount() {
+		return heightCache->getEvictCount();
 	}
 };
 

@@ -48,9 +48,9 @@ MediumDiseaseCommand = {
 	  DotEffect( 
 		DISEASED, 
 		{ "resistance_disease", "poison_disease_resist" },
-		HEALTH,
+		ATTACK_POOL,
 		true,
-		100,
+		0,
 		40,
 		50, 
 		205,
