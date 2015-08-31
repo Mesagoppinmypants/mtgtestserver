@@ -1957,9 +1957,11 @@ int PlayerManagerImplementation::notifyObserverEvent(uint32 eventType, Observabl
 		if(logoutTask != NULL) {
 			logoutTask->cancelLogout();
 		}
+
+		return 1;
 	}
 
-	return 1;
+	return 0;
 }
 
 void PlayerManagerImplementation::sendBattleFatigueMessage(CreatureObject* player, CreatureObject* target) {
@@ -2581,7 +2583,7 @@ void PlayerManagerImplementation::updatePermissionName(CreatureObject* player, i
 		UnicodeString tag = permissionLevelList->getPermissionTag(permissionLevel);
 
 		TangibleObjectDeltaMessage3* tanod3 = new TangibleObjectDeltaMessage3(player);
-		tanod3->updateName(player->getDisplayedName(), tag);
+		tanod3->updateCustomName(player->getDisplayedName(), tag);
 		tanod3->close();
 		player->broadcastMessage(tanod3, true);
 
