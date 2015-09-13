@@ -42,7 +42,25 @@ public:
 		tokenizer.getStringToken(command);
 		command = command.toLowerCase();
 
-		if (command == "setxpmodifier") {
+		if (command == "listjedi") {
+			player->sendSystemMessage("Please wait. This may take a while.");
+
+			EXECUTE_TASK_2(playerManager, player, {
+				playerManager_p->sendAdminJediList(player_p);
+			});
+
+			return 0;
+
+		} else if (command == "listadmins") {
+			player->sendSystemMessage("Please wait. This may take a while.");
+
+			EXECUTE_TASK_2(playerManager, player, {
+					playerManager_p->sendAdminList(player_p);
+			});
+
+			return 0;
+
+		} else if (command == "setxpmodifier") {
 			if (!tokenizer.hasMoreTokens()) {
 				sendSyntax(player);
 				return 1;
@@ -67,10 +85,11 @@ public:
 	}
 
 	static void sendSyntax(CreatureObject* player) {
-		if (player != NULL)
+		if (player != NULL) {
 			player->sendSystemMessage("Syntax: /server playermanager [setxpmodifier] [value]");
+			player->sendSystemMessage("Syntax: /server playermanager [listjedi]");
+		}
 	}
-
 };
 
 #endif /* PLAYERMANAGERCOMMAND_H_ */

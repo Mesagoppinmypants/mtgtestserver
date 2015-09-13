@@ -121,7 +121,7 @@ void WeaponObjectImplementation::createChildObjects() {
 				continue;
 
 			ManagedReference<SceneObject*> obj = zoneServer->createObject(
-					child->getTemplateFile().hashCode(), 1);
+					child->getTemplateFile().hashCode(), getPersistenceLevel());
 
 			if (obj == NULL)
 				continue;
@@ -733,6 +733,9 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 	if (roll < chance) {
 		if (isJediWeapon()) {
 			ManagedReference<SceneObject*> saberInv = getSlottedObject("saber_inv");
+
+			if (saberInv == NULL)
+				return;
 
 			// TODO: is this supposed to be every crystal, or random crystal(s)?
 			for (int i = 0; i < saberInv->getContainerObjectsSize(); i++) {

@@ -221,7 +221,7 @@ public:
 	}
 
 	inline bool requiresAdmin() const {
-		return admin == true;
+		return admin;
 	}
 
 	/*inline int getTarget() {
@@ -240,11 +240,11 @@ public:
 		return maxRangeToTarget;
 	}
 
-	inline String getQueueCommandName() const {
+	inline const String& getQueueCommandName() const {
 		return name;
 	}
 
-	inline String getCharacterAbility() const {
+	inline const String& getCharacterAbility() const {
 		return characterAbility;
 	}
 

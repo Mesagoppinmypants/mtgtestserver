@@ -134,6 +134,8 @@ public:
 		ADMIN_PLAYER_CREDITS               = 181,
 		ADMIN_FIND_OBJECT                  = 182,
 		ADMIN_GUILDINFO                    = 183,
+		ADMIN_JEDILIST                     = 184,
+		ADMIN_LIST                     	   = 185,
 
 		//Teach 221 - 230
 		TEACH_SKILL                        = 221,
