@@ -15,10 +15,12 @@ namespace events {
 
 class PlayerRecoveryEvent : public Task {
 	ManagedReference<PlayerObject*> player;
+	Time startTime;
 
 public:
 	PlayerRecoveryEvent(PlayerObject* pl) : Task(2000) {
 		player = pl;
+		startTime.updateToCurrentTime();
 	}
 
 	~PlayerRecoveryEvent() {
@@ -36,14 +38,17 @@ public:
 
 		Locker _locker(strongParent);
 
-		player->clearRecoveryEvent();
-
 		if (player->isOnline() || player->isLinkDead())
-			player->doRecovery();
+			player->doRecovery(startTime.miliDifference());
 
 
 	}
 
+	void schedule(uint64 delay = 0)
+	{
+		startTime.updateToCurrentTime();
+		Task::schedule(delay);
+	}
 };
 
 }

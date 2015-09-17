@@ -692,11 +692,11 @@ void AiAgentImplementation::doAwarenessCheck() {
 	}
 }
 
-void AiAgentImplementation::doRecovery() {
+void AiAgentImplementation::doRecovery(int latency) {
 	if (isDead() || getZone() == NULL)
 		return;
 
-	activateHAMRegeneration();
+	activateHAMRegeneration(latency);
 	activateStateRecovery();
 	activatePostureRecovery();
 
@@ -3000,7 +3000,7 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* object) {
 			return false;
 		}
 
-		return owner->isAttackableBy(object);
+		return owner->isAttackableBy(object, true);
 	}
 
 	if (object->isPet() || object->isVehicleObject()) {

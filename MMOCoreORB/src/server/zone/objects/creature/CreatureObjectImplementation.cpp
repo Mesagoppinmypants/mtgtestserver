@@ -2133,16 +2133,24 @@ float CreatureObjectImplementation::calculateBFRatio() {
 }
 
 void CreatureObjectImplementation::setDizziedState(int durationSeconds) {
-	if (!hasState(CreatureState::DIZZY)) {
-		Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::DIZZY, durationSeconds);
+	uint32 buffCRC = Long::hashCode(CreatureState::DIZZY);
 
-		Locker locker(state);
-
-		state->setStartFlyText("combat_effects", "go_dizzy", 0, 0xFF, 0);
-		state->setEndFlyText("combat_effects", "no_dizzy", 0xFF, 0, 0);
-
-		addBuff(state);
+	Reference<Buff*> buff = getBuff(buffCRC);
+	if (buff != NULL) {
+		Locker locker(buff);
+		if (buff->getTimeLeft() < durationSeconds) {
+			buff->renew(durationSeconds);
+			return;
+		}
 	}
+
+	Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::DIZZY, durationSeconds);
+	Locker locker(state);
+
+	state->setStartFlyText("combat_effects", "go_dizzy", 0, 0xFF, 0);
+	state->setEndFlyText("combat_effects", "no_dizzy", 0xFF, 0, 0);
+
+	addBuff(state);
 }
 
 void CreatureObjectImplementation::setAimingState(int durationSeconds) {
@@ -2215,45 +2223,63 @@ void CreatureObjectImplementation::setBerserkedState(uint32 duration) {
 	}
 }
 void CreatureObjectImplementation::setStunnedState(int durationSeconds) {
-	if (!hasState(CreatureState::STUNNED)) {
-		Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::STUNNED, durationSeconds, STRING_HASHCODE("stunstate"));
+	uint32 buffCRC = Long::hashCode(CreatureState::STUNNED);
 
-		Locker locker(state);
-
-		state->setStartFlyText("combat_effects", "go_stunned", 0, 0xFF, 0);
-		state->setEndFlyText("combat_effects", "no_stunned", 0xFF, 0, 0);
-		state->setSkillModifier("private_melee_defense", -50);
-		state->setSkillModifier("private_ranged_defense", -50);
-
-		addBuff(state);
-
-		locker.release();
-
-		Reference<PrivateSkillMultiplierBuff*> multBuff = new PrivateSkillMultiplierBuff(asCreatureObject(), STRING_HASHCODE("stunstate"), durationSeconds, BuffType::STATE);
-
-		Locker blocker(multBuff);
-
-		multBuff->setSkillModifier("private_damage_divisor", 5);
-		multBuff->setSkillModifier("private_damage_multiplier", 4);
-
-		addBuff(multBuff);
+	Reference<Buff*> buff = getBuff(buffCRC);
+	if (buff != NULL) {
+		Locker locker(buff);
+		if (buff->getTimeLeft() < durationSeconds) {
+			buff->renew(durationSeconds);
+			return;
+		}
 	}
+
+	Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::STUNNED, durationSeconds, STRING_HASHCODE("stunstate"));
+
+	Locker locker(state);
+
+	state->setStartFlyText("combat_effects", "go_stunned", 0, 0xFF, 0);
+	state->setEndFlyText("combat_effects", "no_stunned", 0xFF, 0, 0);
+	state->setSkillModifier("private_melee_defense", -50);
+	state->setSkillModifier("private_ranged_defense", -50);
+
+	addBuff(state);
+
+	locker.release();
+
+	Reference<PrivateSkillMultiplierBuff*> multBuff = new PrivateSkillMultiplierBuff(asCreatureObject(), STRING_HASHCODE("stunstate"), durationSeconds, BuffType::STATE);
+
+	Locker blocker(multBuff);
+
+	multBuff->setSkillModifier("private_damage_divisor", 5);
+	multBuff->setSkillModifier("private_damage_multiplier", 4);
+
+	addBuff(multBuff);
 }
 
 void CreatureObjectImplementation::setBlindedState(int durationSeconds) {
-	if (!hasState(CreatureState::BLINDED)) {
-		Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::BLINDED, durationSeconds);
+	uint32 buffCRC = Long::hashCode(CreatureState::BLINDED);
 
-		Locker locker(state);
-
-		state->setStartFlyText("combat_effects", "go_blind", 0, 0xFF, 0);
-		state->setEndFlyText("combat_effects", "no_blind", 0xFF, 0, 0);
-
-		state->setSkillModifier("private_attack_accuracy", -60);
-		state->setSkillModifier("private_dodge_attack", -60);
-
-		addBuff(state);
+	Reference<Buff*> buff = getBuff(buffCRC);
+	if (buff != NULL) {
+		Locker locker(buff);
+		if (buff->getTimeLeft() < durationSeconds) {
+			buff->renew(durationSeconds);
+			return;
+		}
 	}
+
+	Reference<StateBuff*> state = new StateBuff(asCreatureObject(), CreatureState::BLINDED, durationSeconds);
+
+	Locker locker(state);
+
+	state->setStartFlyText("combat_effects", "go_blind", 0, 0xFF, 0);
+	state->setEndFlyText("combat_effects", "no_blind", 0xFF, 0, 0);
+
+	state->setSkillModifier("private_attack_accuracy", -60);
+	state->setSkillModifier("private_dodge_attack", -60);
+
+	addBuff(state);
 }
 
 void CreatureObjectImplementation::setIntimidatedState(uint32 mod, uint32 crc, int durationSeconds) {
@@ -2474,23 +2500,21 @@ void CreatureObjectImplementation::notifySelfPositionUpdate() {
 	TangibleObjectImplementation::notifySelfPositionUpdate();
 }
 
-void CreatureObjectImplementation::activateHAMRegeneration() {
+void CreatureObjectImplementation::activateHAMRegeneration(int latency) {
 	if (isIncapacitated() || isDead())
 		return;
 
-	float modifier = 1.f;// (isInCombat()) ? 1.f : 1.f;
+	if (!isPlayerCreature() && isInCombat())
+		return;
+
+	float modifier = (float)latency/1000.f;
 
 	if (isKneeling())
 		modifier *= 1.25f;
 	else if (isSitting())
 		modifier *= 1.75f;
 
-	if (!isPlayerCreature() && isInCombat())
-		return;
-
-	if (!isPlayerCreature())
-		modifier *= 3.f;
-
+	// this formula gives the amount of regen per second
 	uint32 healthTick = (uint32) ceil((float) MAX(0, getHAM(
 			CreatureAttribute::CONSTITUTION)) * 13.0f / 2100.0f * modifier);
 	uint32 actionTick = (uint32) ceil((float) MAX(0, getHAM(
@@ -2511,12 +2535,10 @@ void CreatureObjectImplementation::activateHAMRegeneration() {
 	healDamage(asCreatureObject(), CreatureAttribute::ACTION, actionTick, true, false);
 	healDamage(asCreatureObject(), CreatureAttribute::MIND, mindTick, true, false);
 
-
 	activatePassiveWoundRegeneration();
 }
 
 void CreatureObjectImplementation::activatePassiveWoundRegeneration() {
-
 	/// Health wound regen
 	int healthRegen = getSkillMod("private_med_wound_health");
 
@@ -2753,11 +2775,16 @@ bool CreatureObjectImplementation::isAttackableBy(TangibleObject* object) {
 	return true;
 
 }
+
 bool CreatureObjectImplementation::isAttackableBy(CreatureObject* object) {
+	return isAttackableBy(object, false);
+}
+
+bool CreatureObjectImplementation::isAttackableBy(CreatureObject* object, bool bypassDeadCheck) {
 	if (object == asCreatureObject())
 		return false;
 
-	if (isDead() || isInvisible())
+	if ((!bypassDeadCheck && isDead()) || isInvisible())
 		return false;
 
 	if (object->getZone() != getZone())

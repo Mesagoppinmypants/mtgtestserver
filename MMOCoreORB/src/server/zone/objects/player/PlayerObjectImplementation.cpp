@@ -1519,7 +1519,7 @@ void PlayerObjectImplementation::logout(bool doLock) {
 }
 
 
-void PlayerObjectImplementation::doRecovery() {
+void PlayerObjectImplementation::doRecovery(int latency) {
 	if (getZoneServer()->isServerLoading()) {
 		activateRecovery();
 
@@ -1556,7 +1556,7 @@ void PlayerObjectImplementation::doRecovery() {
 		}
 	}
 
-	creature->activateHAMRegeneration();
+	creature->activateHAMRegeneration(latency);
 	creature->activateStateRecovery();
 
 	CooldownTimerMap* cooldownTimerMap = creature->getCooldownTimerMap();
@@ -1613,6 +1613,9 @@ void PlayerObjectImplementation::activateRecovery() {
 
 		recoveryEvent->schedule(3000);
 	}
+
+	if (!recoveryEvent->isScheduled())
+		recoveryEvent->schedule(3000);
 }
 
 void PlayerObjectImplementation::activateForcePowerRegen() {
@@ -1642,7 +1645,7 @@ void PlayerObjectImplementation::setOnline() {
 
 	clearCharacterBit(PlayerObjectImplementation::LD, true);
 
-	doRecovery();
+	doRecovery(1000);
 
 	activateMissions();
 }
