@@ -43,5 +43,6 @@
 
 
 --Children folder includes
-includeFile("custom_content/tangible/deed/serverobjects.lua")
-includeFile("custom_content/tangible/wearables/serverobjects.lua")
+
+-- Server Objects
+includeFile("custom_content/tangible/wearables/backpack/ep3_chiss_poacher_backpack.lua")

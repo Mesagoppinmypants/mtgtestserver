@@ -43,5 +43,4 @@
 
 
 --Children folder includes
-includeFile("custom_content/tangible/deed/serverobjects.lua")
-includeFile("custom_content/tangible/wearables/serverobjects.lua")
+includeFile("custom_content/tangible/wearables/backpack/serverobjects.lua")

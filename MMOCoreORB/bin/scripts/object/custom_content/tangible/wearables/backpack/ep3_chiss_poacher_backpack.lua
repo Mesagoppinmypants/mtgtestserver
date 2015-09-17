@@ -41,7 +41,37 @@
 --this exception also makes it possible to release a modified version 
 
 
+object_tangible_wearables_backpack_ep3_chiss_poacher_backpack = object_tangible_wearables_backpack_shared_ep3_chiss_poacher_backpack:new {
+	playerRaces = { "object/creature/player/bothan_male.iff",
+				"object/creature/player/bothan_female.iff",
+				"object/creature/player/human_male.iff",
+				"object/creature/player/human_female.iff",
+				"object/creature/player/ithorian_male.iff",
+				"object/creature/player/ithorian_female.iff",
+				"object/creature/player/moncal_male.iff",
+				"object/creature/player/moncal_female.iff",
+				"object/creature/player/rodian_male.iff",
+				"object/creature/player/rodian_female.iff",
+				"object/creature/player/sullustan_male.iff",
+				"object/creature/player/sullustan_female.iff",
+				"object/creature/player/trandoshan_male.iff",
+				"object/creature/player/trandoshan_female.iff",
+				"object/creature/player/twilek_male.iff",
+				"object/creature/player/twilek_female.iff",
+				"object/creature/player/wookiee_male.iff",
+				"object/creature/player/wookiee_female.iff",
+				"object/creature/player/zabrak_male.iff",
+				"object/creature/player/zabrak_female.iff" },
 
---Children folder includes
-includeFile("custom_content/tangible/deed/serverobjects.lua")
-includeFile("custom_content/tangible/wearables/serverobjects.lua")
+	numberExperimentalProperties = {1, 1, 1, 1},
+	experimentalProperties = {"XX", "XX", "XX", "XX"},
+	experimentalWeights = {1, 1, 1, 1},
+	experimentalGroupTitles = {"null", "null", "null", "null"},
+	experimentalSubGroupTitles = {"null", "null", "sockets", "hitpoints"},
+	experimentalMin = {0, 0, 0, 1000},
+	experimentalMax = {0, 0, 0, 1000},
+	experimentalPrecision = {0, 0, 0, 0},
+	experimentalCombineType = {0, 0, 4, 4},
+}
+
+ObjectTemplates:addTemplate(object_tangible_wearables_backpack_ep3_chiss_poacher_backpack, "object/tangible/wearables/backpack/ep3_chiss_poacher_backpack.iff")

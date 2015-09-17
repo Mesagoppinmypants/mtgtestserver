@@ -9,5 +9,7 @@ JUNKJAWA = 64
 JUNKGUNGAN = 128
 JUNKCORSEC = 256
 
---Vehicle Loot Deeds
-includeFile("custom_loot/items/vehicle_loot_deeds/barc_speeder_loot_deed.lua")                        
+
+includeFile("custom_loot/items/backpacks/ep3_chiss_poacher_backpack.lua")
+includeFile("custom_loot/items/vehicle_loot_deeds/barc_speeder_loot_deed.lua")
+                       
