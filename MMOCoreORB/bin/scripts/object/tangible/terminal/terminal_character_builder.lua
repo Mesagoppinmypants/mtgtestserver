@@ -1627,12 +1627,12 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 				"Backpacks",
 				{
 					"Travel Pack", "object/tangible/wearables/backpack/backpack_s01.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s03.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s03_quest.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s04.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s05.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s06.iff",
-					"Travel Pack", "object/tangible/wearables/backpack/backpack_s06_quest.iff",
+					"Military Travel Pack", "object/tangible/wearables/backpack/backpack_s03.iff",
+					"Lightweight Military Pack", "object/tangible/wearables/backpack/backpack_s03_quest.iff",
+					"Tech Pack", "object/tangible/wearables/backpack/backpack_s04.iff",
+					"Bounty Hunter Pack", "object/tangible/wearables/backpack/backpack_s05.iff",
+					"Spec-Ops Pack", "object/tangible/wearables/backpack/backpack_s06.iff",
+					"Spec-Ops Field Agent Pack", "object/tangible/wearables/backpack/backpack_s06_quest.iff",
 					"Singing Mountain Clan Pack", "object/tangible/wearables/backpack/singing_mountain_clan_backpack.iff",
 					"Chiss Backpack", "object/tangible/wearables/backpack/ep3_chiss_poacher_backpack.iff"
 				}
