@@ -1626,7 +1626,7 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 				},
 				"Backpacks",
 				{
-					"Backpack 01", "object/tangible/wearables/backpack/backpack_s01.iff"
+					"Travel Pack", "object/tangible/wearables/backpack/backpack_s01.iff"
 				}
 			},
 			--"Consumables",
@@ -1797,13 +1797,14 @@ object_tangible_terminal_terminal_character_builder = object_tangible_terminal_s
 			{
 				"Vehicle Deeds",
 				{
+					"BARC Speeder", "object/tangible/deed/vehicle_deed/barc_speeder_deed.iff",
 					"Swoop", "object/tangible/deed/vehicle_deed/speederbike_swoop_deed.iff",
-					--"Jetpack", "object/tangible/deed/vehicle_deed/jetpack_deed.iff",
+					"Jetpack", "object/tangible/deed/vehicle_deed/jetpack_deed.iff",
 					"Speederbike", "object/tangible/deed/vehicle_deed/speederbike_deed.iff",
-					--"Speederbike Flash", "object/tangible/deed/vehicle_deed/speederbike_flash_deed.iff",
-					--"Landspeeder av21", "object/tangible/deed/vehicle_deed/landspeeder_av21_deed.iff",
-					--"Landspeeder x31", "object/tangible/deed/vehicle_deed/landspeeder_x31_deed.iff",
-					--"Landspeeder x34", "object/tangible/deed/vehicle_deed/landspeeder_x34_deed.iff"
+					"Flash Speeder", "object/tangible/deed/vehicle_deed/speederbike_flash_deed.iff",
+					"Landspeeder AV-21", "object/tangible/deed/vehicle_deed/landspeeder_av21_deed.iff",
+					"Landspeeder X-31", "object/tangible/deed/vehicle_deed/landspeeder_x31_deed.iff",
+					"Landspeeder X-34", "object/tangible/deed/vehicle_deed/landspeeder_x34_deed.iff"
 				},
 				"Structure Deeds",
 				{
