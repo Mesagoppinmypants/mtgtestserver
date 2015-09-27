@@ -235,24 +235,26 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 	if (!guild->isElectionEnabled()) {
 		uint64 leaderID = guild->getGuildLeaderID();
 		bool startElections = false;
+		StringIdChatParameter params;
 
 		ManagedReference<SceneObject*> leader = server->getObject(leaderID);
 
 		if (leader == NULL || !leader->isPlayerCreature()) {
 			startElections = true;
+			params.setStringId("@guild:open_elections_email_body"); // Your guild has started an election for a new guild leader! You may vote at the guild terminal in your PA Hall. If you are a full member of the guild, you may opt to run for the position of guild leader by registering at the guild terminal. A new guild leader will be elected in exactly two weeks. The guild member with the most votes at that time will become guild leader.
 		} else {
 			CreatureObject* leaderCreo = leader.castTo<CreatureObject*>();
 
-			if (leaderCreo->getPlayerObject()->getDaysSinceLastLogout() >= 30)
+			if (leaderCreo->getPlayerObject()->getDaysSinceLastLogout() >= 30) {
 				startElections = true;
+				params.setStringId("@guild:open_elections_absent_email_body"); // Your guild leader has not logged in for an extended period of time. In order to enable your guild to continue to operate efficiently, the guild leader voting system has been enabled. You may vote at the guild terminal in your PA Hall. If you are a full member of the guild, you may opt to run for the position of guild leader by registering at the guild terminal. A new guild leader will be elected in exactly two weeks. The guild member with the most votes at that time will become guild leader.
+			}
 		}
 
 		if (startElections) {
 			guild->resetElection(false);
 			guild->setElectionState(GuildObject::ELECTION_FIRST_WEEK);
 
-			StringIdChatParameter params;
-			params.setStringId("@guild:open_elections_absent_email_body"); // Your guild leader has not logged in for an extended period of time. In order to enable your guild to continue to operate efficiently, the guild leader voting system has been enabled. You may vote at the guild terminal in your PA Hall. If you are a full member of the guild, you may opt to run for the position of guild leader by registering at the guild terminal. A new guild leader will be elected in exactly two weeks. The guild member with the most votes at that time will become guild leader.
 			sendGuildMail("@guild:open_elections_absent_email_subject", params, guild); // Guild Leader Elections Open!
 		}
 	}
@@ -932,7 +934,7 @@ void GuildManagerImplementation::sendTransferAckTo(CreatureObject* player, const
 }
 
 void GuildManagerImplementation::transferLeadership(CreatureObject* newLeader, CreatureObject* oldLeader, bool election) {
-	GuildObject* guild = newLeader->getGuildObject();
+	GuildObject* guild = newLeader->getGuildObject().get();
 
 	Locker glock(guild);
 	guild->setGuildLeaderID(newLeader->getObjectID());
@@ -1098,7 +1100,7 @@ void GuildManagerImplementation::sendGuildMemberOptionsTo(CreatureObject* player
 }
 
 void GuildManagerImplementation::sendGuildSetTitleTo(CreatureObject* player, CreatureObject* target) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->hasTitlePermission(player->getObjectID())) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); // You do not have permission to perform that operation.
@@ -1125,7 +1127,7 @@ void GuildManagerImplementation::sendGuildSetTitleTo(CreatureObject* player, Cre
 }
 
 void GuildManagerImplementation::setMemberTitle(CreatureObject* player, CreatureObject* target, const String& title) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->hasTitlePermission(player->getObjectID())) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); // You do not have permission to perform that operation.
@@ -1189,7 +1191,7 @@ void GuildManagerImplementation::sendGuildKickPromptTo(CreatureObject* player, C
 }
 
 void GuildManagerImplementation::kickMember(CreatureObject* player, CreatureObject* target) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	uint64 targetID = target->getObjectID();
 
@@ -1252,7 +1254,7 @@ void GuildManagerImplementation::kickMember(CreatureObject* player, CreatureObje
 }
 
 void GuildManagerImplementation::sendMemberPermissionsTo(CreatureObject* player, uint64 targetID, GuildTerminal* guildTerminal) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->isGuildLeader(player)) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); // You do not have permission to perform that operation.
@@ -1295,7 +1297,7 @@ void GuildManagerImplementation::sendMemberPermissionsTo(CreatureObject* player,
 
 void GuildManagerImplementation::toggleGuildPermission(CreatureObject* player, uint64 targetID, int permissionIndex, GuildTerminal* guildTerminal) {
 
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->isGuildLeader(player) || player->getObjectID() == targetID) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); // You do not have permission to perform that operation.
@@ -1368,7 +1370,7 @@ void GuildManagerImplementation::sendGuildSponsorTo(CreatureObject* player, Guil
 void GuildManagerImplementation::sponsorPlayer(CreatureObject* player, const String& playerName) {
 	ManagedReference<PlayerManager*> playerManager = server->getPlayerManager();
 
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL)
 		return;
@@ -1434,7 +1436,7 @@ void GuildManagerImplementation::sponsorPlayer(CreatureObject* player, const Str
 void GuildManagerImplementation::acceptSponsorshipRequest(CreatureObject* player, CreatureObject* target) {
 	Locker _lock(player, target);
 
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL)
 		return;
@@ -1546,7 +1548,7 @@ void GuildManagerImplementation::sendGuildSponsoredOptionsTo(CreatureObject* pla
 }
 
 void GuildManagerImplementation::acceptSponsoredPlayer(CreatureObject* player, uint64 targetID) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->hasAcceptPermission(player->getObjectID())) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); // You do not have permission to perform that operation.
@@ -1611,7 +1613,7 @@ void GuildManagerImplementation::acceptSponsoredPlayer(CreatureObject* player, u
 }
 
 void GuildManagerImplementation::declineSponsoredPlayer(CreatureObject* player, uint64 targetID) {
-	ManagedReference<GuildObject*> guild = player->getGuildObject();
+	ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 
 	if (guild == NULL || !guild->hasAcceptPermission(player->getObjectID())) {
 		player->sendSystemMessage("@guild:generic_fail_no_permission"); //You do not have permission to perform that operation.
@@ -1862,6 +1864,7 @@ void GuildManagerImplementation::sendAdminGuildInfoTo(CreatureObject* player, Gu
 
 	StringBuffer promptText;
 	promptText << "Guild Name: " << guild->getGuildName() << " <" << guild->getGuildAbbrev() << ">" << endl;
+	promptText << "Guild OID: " << guild->getObjectID() << endl;
 	promptText << "Guild ID: " << guild->getGuildID() << endl;
 
 	uint64 leaderID = guild->getGuildLeaderID();
@@ -2037,6 +2040,10 @@ void GuildManagerImplementation::leaveGuild(CreatureObject* player, GuildObject*
 	params.setTU(player->getDisplayedName());
 
 	sendGuildMail("@guildmail:leave_subject", params, guild);
+
+	if (guild->getGuildLeaderID() == 0 && !guild->isElectionEnabled()) {
+		toggleElection(guild, NULL);
+	}
 }
 
 void GuildManagerImplementation::sendGuildMail(const String& subject, StringIdChatParameter& body, GuildObject* guild) {
@@ -2073,7 +2080,9 @@ void GuildManagerImplementation::toggleElection(GuildObject* guild, CreatureObje
 	if (guild->isElectionEnabled()) {
 		guild->resetElection(true);
 
-		player->sendSystemMessage("@guild:vote_elections_closed"); // Elections for the position of guild leader are now closed.
+		if (player != NULL) {
+			player->sendSystemMessage("@guild:vote_elections_closed"); // Elections for the position of guild leader are now closed.
+		}
 
 		params.setStringId("@guild:closed_elections_email_body"); // Your guild's election for a new guild leader has been closed by the current guild leader.
 		sendGuildMail("@guild:closed_elections_email_subject", params, guild); // Guild Leader Elections Closed!
@@ -2081,7 +2090,9 @@ void GuildManagerImplementation::toggleElection(GuildObject* guild, CreatureObje
 		guild->resetElection(false);
 		guild->setElectionState(GuildObject::ELECTION_FIRST_WEEK);
 
-		player->sendSystemMessage("@guild:vote_elections_open"); // Elections for the position of guild leader are now open.
+		if (player != NULL) {
+			player->sendSystemMessage("@guild:vote_elections_open"); // Elections for the position of guild leader are now open.
+		}
 
 		params.setStringId("@guild:open_elections_email_body"); // Your guild has started an election for a new guild leader! You may vote at the guild terminal in your PA Hall. If you are a full member of the guild, you may opt to run for the position of guild leader by registering at the guild terminal. A new guild leader will be elected in exactly two weeks. The guild member with the most votes at that time will become guild leader.
 		sendGuildMail("@guild:open_elections_email_subject", params, guild); // Guild Leader Elections Open!

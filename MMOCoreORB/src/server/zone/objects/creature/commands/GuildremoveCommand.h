@@ -43,7 +43,7 @@ public:
 
 		ManagedReference<CreatureObject*> playerToKick = NULL;
 		ManagedReference<SceneObject* > targetedObject = zserv->getObject(target);
-		ManagedReference<GuildObject*> guild = player->getGuildObject();
+		ManagedReference<GuildObject*> guild = player->getGuildObject().get();
 		ManagedReference<GuildManager*> guildManager = zserv->getGuildManager();
 		ManagedReference<PlayerManager*> playerManager = zserv->getPlayerManager();
 
@@ -73,11 +73,7 @@ public:
 			guildManager->sendGuildKickPromptTo(player, playerToKick);
 
 		} else {
-			// TODO: Allow leader to leave guild once guild elections are enabled
-			if(guild->getGuildLeaderID() == player->getObjectID())
-				player->sendSystemMessage("Guild leader cannot leave the guild");
-			else
-				guildManager->leaveGuild(player, guild);
+			guildManager->leaveGuild(player, guild);
 		}
 
 		return SUCCESS;

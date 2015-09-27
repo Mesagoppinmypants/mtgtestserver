@@ -15,7 +15,7 @@
 #include "server/zone/objects/scene/SceneObject.h"
 
 class ScreenPlayTask : public Task {
-	Reference<SceneObject*> obj;
+	ManagedWeakReference<SceneObject*> obj;
 	String taskKey;
 	String screenPlay;
 	Reference<PersistentEvent*> persistentEvent;
@@ -37,8 +37,10 @@ public:
 			return;
 		}
 
+		ManagedReference<SceneObject*> obj = this->obj.get();
+
 		if (obj != NULL) {
-			Locker locker(obj.get());
+			Locker locker(obj);
 
 			DirectorManager::instance()->activateEvent(this);
 		} else {
@@ -46,8 +48,8 @@ public:
 		}
 	}
 
-	inline Reference<SceneObject*> getSceneObject() {
-		return obj;
+	ManagedReference<SceneObject*> getSceneObject() {
+		return obj.get();
 	}
 
 	String getTaskKey() {

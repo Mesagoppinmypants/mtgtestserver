@@ -287,11 +287,11 @@ void CreatureObjectImplementation::sendToOwner(bool doClose) {
 
 	assert(vec != NULL);
 
-	SortedVector<ManagedReference<QuadTreeEntry* > > closeObjects;
+	SortedVector<QuadTreeEntry*> closeObjects;
 	vec->safeCopyTo(closeObjects);
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
-		SceneObject* obj = cast<SceneObject*> (closeObjects.get(i).get());
+		SceneObject* obj = cast<SceneObject*> (closeObjects.get(i));
 
 		if (obj != asCreatureObject()) {
 			if (obj != grandParent) {
@@ -2728,7 +2728,8 @@ bool CreatureObjectImplementation::isAggressiveTo(CreatureObject* object) {
 		return true;
 	}
 
-	if (guild != NULL && guild->isInWaringGuild(object))
+	ManagedReference<GuildObject*> guildObject = guild.get();
+	if (guildObject != NULL && guildObject->isInWaringGuild(object))
 		return true;
 
 	return false;
@@ -2853,7 +2854,8 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* object, bool b
 		return true;
 	}
 
-	if (guild != NULL && guild->isInWaringGuild(object))
+	ManagedReference<GuildObject*> guildObject = guild.get();
+	if (guildObject != NULL && guildObject->isInWaringGuild(object))
 		return true;
 
 	return false;
@@ -3181,7 +3183,7 @@ void CreatureObjectImplementation::destroyPlayerCreatureFromDatabase(bool destro
 	}
 
 	if (isInGuild()) {
-		GuildObject* guild = getGuildObject();
+		ManagedReference<GuildObject*> guild = getGuildObject().get();
 
 		Locker clocker(guild, asCreatureObject());
 

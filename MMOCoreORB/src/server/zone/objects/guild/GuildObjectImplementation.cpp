@@ -61,6 +61,10 @@ void GuildObjectImplementation::removeMember(uint64 playerID) {
 		setVote(playerID, 0);
 		votes.drop(playerID);
 	}
+
+	if (playerID == guildLeaderID) {
+		guildLeaderID = 0;
+	}
 }
 
 bool GuildObjectImplementation::hasMember(uint64 playerID) {
@@ -96,7 +100,7 @@ String GuildObjectImplementation::getGuildMemberTitle(uint64 playerID) {
 }
 
 bool GuildObjectImplementation::isInWaringGuild(CreatureObject* creature) {
-	ManagedReference<GuildObject*> attackerGuild = creature->getGuildObject();
+	ManagedReference<GuildObject*> attackerGuild = creature->getGuildObject().get();
 
 	if (attackerGuild != NULL) {
 
