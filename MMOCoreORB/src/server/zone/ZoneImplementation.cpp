@@ -13,7 +13,6 @@
 #include "server/zone/managers/objectcontroller/ObjectController.h"
 #include "server/zone/templates/SharedObjectTemplate.h"
 #include "server/zone/packets/player/GetMapLocationsResponseMessage.h"
-#include "server/zone/managers/gcw/GCWManager.h"
 
 #include "server/zone/objects/cell/CellObject.h"
 #include "server/zone/objects/region/Region.h"
@@ -50,8 +49,6 @@ ZoneImplementation::ZoneImplementation(ZoneProcessServer* serv, const String& na
 
 	planetManager = NULL;
 
-	gcwManager = NULL;
-
 	setLoggingName("Zone " + name);
 }
 
@@ -69,8 +66,6 @@ void ZoneImplementation::initializePrivateData() {
 	creatureManager = new CreatureManager(_this.getReferenceUnsafeStaticCast());
 	creatureManager->deploy("CreatureManager " + zoneName);
 	creatureManager->setZoneProcessor(processor);
-
-	gcwManager = new GCWManager(_this.getReferenceUnsafeStaticCast());
 }
 
 void ZoneImplementation::finalize() {
@@ -86,8 +81,6 @@ void ZoneImplementation::initializeTransientMembers() {
 }
 
 void ZoneImplementation::startManagers() {
-	gcwManager->start();
-
 	planetManager->initialize();
 
 	creatureManager->initialize();
@@ -518,6 +511,15 @@ void ZoneImplementation::registerObjectWithPlanetaryMap(SceneObject* object) {
 	Locker locker(mapLocations);
 #endif
 	mapLocations->transferObject(object);
+
+	// If the object is a valid location for entertainer missions then add it
+	// to the planet's mission map.
+	if (objectIsValidPlanetaryMapPerformanceLocation(object)) {
+		PlanetManager* planetManager = getPlanetManager();
+		if (planetManager != NULL) {
+			planetManager->addPerformanceLocation(object);
+		}
+	}
 }
 
 void ZoneImplementation::unregisterObjectWithPlanetaryMap(SceneObject* object) {
@@ -525,6 +527,50 @@ void ZoneImplementation::unregisterObjectWithPlanetaryMap(SceneObject* object) {
 	Locker locker(mapLocations);
 #endif
 	mapLocations->dropObject(object);
+
+	// If the object is a valid location for entertainer missions then remove it
+	// from the planet's mission map.
+	if (objectIsValidPlanetaryMapPerformanceLocation(object)) {
+		PlanetManager* planetManager = getPlanetManager();
+		if (planetManager != NULL) {
+			planetManager->removePerformanceLocation(object);
+		}
+	}
+}
+
+bool ZoneImplementation::objectIsValidPlanetaryMapPerformanceLocation(SceneObject* object) {
+	BuildingObject* building = object->asBuildingObject();
+	if (building == NULL) {
+		return false;
+	}
+
+	bool hasPerformanceLocationCategory = false;
+
+	PlanetMapCategory* planetMapCategory = object->getPlanetMapCategory();
+	if (planetMapCategory != NULL) {
+		String category = planetMapCategory->getName();
+		if (category == "cantina" || category == "hotel") {
+			hasPerformanceLocationCategory = true;
+		}
+	}
+
+	if (!hasPerformanceLocationCategory) {
+		planetMapCategory = object->getPlanetMapSubCategory();
+		if (planetMapCategory != NULL) {
+			String subCategory = planetMapCategory->getName();
+			if (subCategory == "guild_theater") {
+				hasPerformanceLocationCategory = true;
+			}
+		}
+	}
+
+	if (hasPerformanceLocationCategory) {
+		if (building->isPublicStructure()) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool ZoneImplementation::isObjectRegisteredWithPlanetaryMap(SceneObject* object) {

@@ -40,6 +40,15 @@ void WeaponObjectImplementation::initializeTransientMembers() {
 	}
 }
 
+void WeaponObjectImplementation::notifyLoadFromDatabase() {
+	if (forceCost != 0) {
+		saberForceCost = forceCost;
+		forceCost = 0;
+	}
+
+	TangibleObjectImplementation::notifyLoadFromDatabase();
+}
+
 void WeaponObjectImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 	TangibleObjectImplementation::loadTemplateData(templateData);
 
@@ -346,7 +355,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 
 	// Force Cost
 	if (getForceCost() > 0)
-		alm->insertAttribute("forcecost", getForceCost());
+		alm->insertAttribute("forcecost", (int)getForceCost());
 
 	for (int i = 0; i < getNumberOfDots(); i++) {
 

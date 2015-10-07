@@ -53,10 +53,6 @@ void ThreatMatrix::clear() {
 }
 
 void ThreatMatrix::add(CreatureObject* creature, ThreatMapEntry* entry) {
-
-	if(!creature->isPlayerCreature())
-		return;
-
 	// Get Total Damage
 	uint32 totalDamage = entry->getTotalDamage() - entry->getNonAggroDamage();
 

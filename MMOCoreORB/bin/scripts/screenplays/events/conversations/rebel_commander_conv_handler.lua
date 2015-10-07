@@ -50,10 +50,6 @@ function rebelCommanderConvoHandler:runScreenHandlers(conversationTemplate, conv
 	elseif screenID == "m5_active_restart" then
 		Coa2Screenplay:cleanupMission(conversingPlayer, "rebel")
 		Coa2Screenplay:startMissionFive(conversingPlayer, conversingNPC, "rebel")
-	elseif screenID == "m5_finish" then
-		if readScreenPlayData(conversingPlayer, "rebel_coa2", "state") == "13" then
-			Coa2Screenplay:finishMissionFive(conversingPlayer, "rebel")
-		end
 	end
 
 	return conversationScreen
